@@ -1,7 +1,7 @@
 import time
 import requests
 from bs4 import BeautifulSoup
-from hanziconv import HanziConv
+import chinese_converter
 from flask import Flask, render_template
 
 # from flask import Flask, render_template, json, redirect, request
@@ -91,11 +91,11 @@ def latest():
         # Get latest content
         latest_chapter_url, latest_chapter_title = chapter_list[-1]
     latest_chapter_soup = get_soup(BASE_URL + latest_chapter_url)
-    title = HanziConv.toTraditional(latest_chapter_title)
-    content = latest_chapter_soup.find("dd", id="contents")
-    content = HanziConv().toTraditional(str(content))
+    latest_chapter_title = chinese_converter.to_traditional(latest_chapter_title)
+    latest_chapter_content = latest_chapter_soup.find("dd", id="contents")
+    latest_chapter_content = chinese_converter.to_traditional(str(latest_chapter_content))
 
-    return render_template("latest.html", title=title, content=content)
+    return render_template("latest.html", title=latest_chapter_title, content=latest_chapter_content)
 
 
 # @app.route("/GetPlayerInfo/<row>")
